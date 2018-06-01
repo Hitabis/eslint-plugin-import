@@ -53,7 +53,9 @@ export function isScopedMain(name) {
 }
 
 function isInternalModule(name, settings, path) {
-  return externalModuleRegExp.test(name) && !isExternalPath(path, name, settings)
+  const folders = settings && settings['import/internal-module-folders']
+  const customInternalModule = folders && folders.some(folder => name.startsWith(folder))
+  return customInternalModule || externalModuleRegExp.test(name) && !isExternalPath(path, name, settings)
 }
 
 function isRelativeToParent(name) {
