@@ -55,7 +55,7 @@ export function isScopedMain(name) {
 function isInternalModule(name, settings, path) {
   const folders = settings && settings['import/internal-module-folders']
   const customInternalModule = folders && folders.some(folder => name.startsWith(folder))
-  return customInternalModule || externalModuleRegExp.test(name) && !isExternalPath(path, name, settings)
+  return customInternalModule || (externalModuleRegExp.test(name) && !isExternalPath(path, name, settings))
 }
 
 function isRelativeToParent(name) {
@@ -72,11 +72,11 @@ function isRelativeToSibling(name) {
 }
 
 const typeTest = cond([
+  [isInternalModule, constant('internal')],
   [isAbsolute, constant('absolute')],
   [isBuiltIn, constant('builtin')],
   [isExternalModule, constant('external')],
   [isScoped, constant('external')],
-  [isInternalModule, constant('internal')],
   [isRelativeToParent, constant('parent')],
   [isIndex, constant('index')],
   [isRelativeToSibling, constant('sibling')],
